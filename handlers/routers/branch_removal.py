@@ -41,4 +41,7 @@ async def wait_for_confirmation(message: Message, state: FSMContext):
 
         await message.answer("data has removed successfully")
 
-        await state.clear()
+    else:
+        await message.answer("then i won't delete your branch")
+
+    await state.clear()

@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "sqlite:///bot_branches.db"
+DATABASE_URL = "sqlite:///bot.db"
 
 engine = create_engine(
     url=DATABASE_URL,
@@ -22,5 +22,11 @@ class Branch(Base):
     branch_name = Column(String)
     input_id = Column(Integer)
     output_id = Column(Integer)
+
+class BeyondMessage(Base):
+    __tablename__ = "Beyond Message"
+
+    user_id = Column(Integer, primary_key=True, index=True)
+    addition = Column(String)
 
 Base.metadata.create_all(bind=engine)
