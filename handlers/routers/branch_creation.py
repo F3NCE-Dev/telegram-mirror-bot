@@ -42,6 +42,7 @@ async def process_out(message: Message, state: FSMContext):
             branch_name = data["branch_name"],
             input_id = data["input_id"],
             output_id = data["output_id"],
+            status = True,
         )
         db.add(branch)
         db.commit()
@@ -51,26 +52,3 @@ async def process_out(message: Message, state: FSMContext):
         await message.answer("data has received successfully")
 
         await state.clear()
-
-@router.message(Command ('list'))
-async def getList(message: Message):
-    db = SessionLocal()
-
-    rows = db.query(
-        Branch.branch_name,
-        Branch.input_id,
-        Branch.output_id,
-    ).all()
-
-    db.close()
-
-    if not rows:
-        await message.answer("No branches found")
-        return
-    
-    branch_list = "Your brances:"
-
-    for branch_name, input_id, output_id in rows:
-        branch_list += f"\n\n {branch_name}: {input_id} --------------> {output_id}"
-
-    await message.answer(f'{branch_list}')

@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
@@ -22,6 +22,7 @@ class Branch(Base):
     branch_name = Column(String)
     input_id = Column(Integer)
     output_id = Column(Integer)
+    status = Column(Boolean)
 
 class BeyondMessage(Base):
     __tablename__ = "Beyond Message"
