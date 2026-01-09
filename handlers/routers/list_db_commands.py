@@ -9,14 +9,15 @@ router = Router()
 
 @router.message(Command ('list'))
 async def getList(message: Message):
-    if not Get_Branch_DB:
+    user_id = message.chat.id
+    if not Get_Branch_DB(user_id):
         await message.answer("No branches found")
         return
     
     branch_list = "Your brances:"
 
-    for branch_name, input_id, output_id in Get_Branch_DB:
-        branch_list += f"\n\n {branch_name}: {input_id} --------------> {output_id}"
+    for branch_name, input_id, output_id in Get_Branch_DB(user_id):
+        branch_list += f"\n\n {branch_name}: {output_id} --------------> {input_id}"
 
     await message.answer(f'{branch_list}')
 

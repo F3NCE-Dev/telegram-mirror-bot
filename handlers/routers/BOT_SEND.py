@@ -5,15 +5,15 @@ from handlers.DB_HANDLER import *
 
 router = Router()
 
-@router.message_handler()
+@router.message()
 async def send_message_byID(message: Message):
-    for input_id, output_id in Get_Branch_DB:
+    user_id = message.chat.id
+    for branch_name, input_id, output_id in Get_Branch_DB(user_id):
         if (message.chat.id == output_id):
-            messageID = message.chat.id
-            Bot_message = message
+            Bot_message = message.text
 
-            if Get_Addition_DB(messageID):
-                test = Get_Addition_DB(messageID)
+            if Get_Addition_DB(user_id):
+                test = Get_Addition_DB(user_id)
                 Bot_message += test
 
             await bot.send_message(chat_id=input_id, text=Bot_message)

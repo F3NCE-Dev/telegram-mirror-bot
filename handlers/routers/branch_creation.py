@@ -9,8 +9,8 @@ router = Router()
 
 class States(StatesGroup):
     waiting_for_name = State()
-    waiting_for_in = State()
     waiting_for_out = State()
+    waiting_for_in = State()
 
 #User States
 @router.message(Command("create"))
@@ -22,18 +22,18 @@ async def add_branch(message: Message, state: FSMContext):
 @router.message(States.waiting_for_name)
 async def process_user_id(message: Message, state: FSMContext):
     await state.update_data(branch_name=message.text)
-    await message.answer('type your "input id"')
-    await state.set_state(States.waiting_for_in)
-
-@router.message(States.waiting_for_in)
-async def process_name(message: Message, state: FSMContext):
-        await state.update_data(input_id=message.text)
-        await message.answer('type your "output id"')
-        await state.set_state(States.waiting_for_out)
+    await message.answer('type your "output id"')
+    await state.set_state(States.waiting_for_out)
 
 @router.message(States.waiting_for_out)
-async def process_out(message: Message, state: FSMContext):
+async def process_name(message: Message, state: FSMContext):
         await state.update_data(output_id=message.text)
+        await message.answer('type your "input id"')
+        await state.set_state(States.waiting_for_in)
+
+@router.message(States.waiting_for_in)
+async def process_out(message: Message, state: FSMContext):
+        await state.update_data(input_id=message.text)
         data = await state.get_data()
 
         db = SessionLocal()

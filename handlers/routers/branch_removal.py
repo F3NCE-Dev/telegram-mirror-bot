@@ -28,7 +28,7 @@ async def wait_for_confirmation(message: Message, state: FSMContext):
     
     data = await state.get_data()
 
-    if data["confirmation_state"] == "y":
+    if data["confirmation_state"] == "Y" or "y":
         db = SessionLocal()
 
         branch = db.query(Branch).filter(Branch.branch_name == data["branch_name"]).first()
