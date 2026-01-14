@@ -6,7 +6,7 @@ router = Router()
 
 @router.message(Command ("start"))
 async def StartMessage(message: Message):
-    await message.answer("Hi!\nUse help /help for detailed information")
+    await message.answer("Hi!\nUse /help for detailed information")
 
 @router.message(Command ('help'))
 async def getHelp(message: Message):

@@ -20,7 +20,7 @@ def Get_Addition_DB(user_id: int):
     ).filter(BeyondMessage.user_id == user_id).first()
 
     db.close()
-    return addition
+    return addition[0]
 
 class BranchNotFoundError(Exception):
     """branch is not found"""

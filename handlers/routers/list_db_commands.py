@@ -23,7 +23,8 @@ async def getList(message: Message):
 
 @router.message(Command ('viewad'))
 async def getAddtion(message: Message):
-    if Get_Addition_DB:
-        await message.answer(f'Your addition is "{Get_Addition_DB}"')
+    chat_id = message.chat.id
+    if Get_Addition_DB(chat_id):
+        await message.answer(f'Your addition is "{Get_Addition_DB(chat_id)}"')
     else:
         await message.answer("You have no an addition")
