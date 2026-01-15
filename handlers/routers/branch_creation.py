@@ -21,34 +21,45 @@ async def add_branch(message: Message, state: FSMContext):
 
 @router.message(States.waiting_for_name)
 async def process_user_id(message: Message, state: FSMContext):
+    if len(message.text) > 25:
+        await message.answer("Your message is too long")
+        return
+
     await state.update_data(branch_name=message.text)
     await message.answer('type your "output id"')
     await state.set_state(States.waiting_for_out)
 
 @router.message(States.waiting_for_out)
 async def process_name(message: Message, state: FSMContext):
-        await state.update_data(output_id=message.text)
-        await message.answer('type your "input id"')
-        await state.set_state(States.waiting_for_in)
+        if message.text.isdigit():
+            await state.update_data(output_id=message.text)
+            await message.answer('type your "input id"')
+            await state.set_state(States.waiting_for_in)
+        else:
+            await message.answer("output ID must be a number")
 
 @router.message(States.waiting_for_in)
 async def process_out(message: Message, state: FSMContext):
-        await state.update_data(input_id=message.text)
-        data = await state.get_data()
+        if message.text.isdigit():
+            await state.update_data(input_id=message.text)
+            data = await state.get_data()
 
-        db = SessionLocal()
-        branch = Branch(
-            user_id = data["user_id"],
-            branch_name = data["branch_name"],
-            input_id = data["input_id"],
-            output_id = data["output_id"],
-            status = True,
-        )
-        db.add(branch)
-        db.commit()
-        
-        db.close()
+            db = SessionLocal()
+            branch = Branch(
+                user_id = data["user_id"],
+                branch_name = data["branch_name"],
+                input_id = data["input_id"],
+                output_id = data["output_id"],
+                status = True,
+            )
+            db.add(branch)
+            db.commit()
+            
+            db.close()
 
-        await message.answer("data has received successfully")
+            await message.answer("data has received successfully")
 
-        await state.clear()
+            await state.clear()
+        else:
+            await message.answer("input ID must be a number")
+            

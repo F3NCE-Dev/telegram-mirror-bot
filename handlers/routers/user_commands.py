@@ -19,9 +19,9 @@ async def getHelp(message: Message):
                                 '\n/addition - add something at the end of the messages'
                                 '\n/remove_addition - remove the addition'
                                 '\n/viewad - view your current addition'
-                                '\n/switch - change your branch status', parse_mode='html')
+                                '\n/switch - change your branch status'
+                                '\n/cancel — cancel the current action', parse_mode='html')
 
 @router.message(Command ('id'))
 async def getID(message: Message):
     await message.answer(f'{message.chat.id}')
-
