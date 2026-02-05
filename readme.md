@@ -24,6 +24,11 @@ This Telegram bot allows you to create "branches" of channels and send messages 
 
 ## Local installation
 
+### Requirements
+
+- Python 3.11+
+- Git
+
 ### Step 1: Clone the repository
 
 ```bash
