@@ -1,9 +1,8 @@
 from aiogram.types import Message
-from src.database import SessionLocal, Branch
 from aiogram.filters import Command
 from aiogram import Router
 
-from handlers.DB_HANDLER import Get_Addition_DB, Get_Branch_DB, Is_There_Branch, Is_There_Addtion
+from dependencies import Get_Addition_DB, Get_Branch_DB, Is_There_Branch, Is_There_Addtion
 
 router = Router()
 

@@ -1,7 +1,7 @@
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from src.database import SessionLocal, BeyondMessage
+from database import SessionLocal, BeyondMessage
 from aiogram.filters import Command
 from aiogram import Router
 
@@ -19,21 +19,16 @@ async def Create_ExtraMessage(message: Message, state: FSMContext):
 @router.message(States.waiting_for_extra_message)
 async def Waiting_for_extra_message(message: Message, state: FSMContext):
     await state.update_data(extra=message.text)
-
     data = await state.get_data()
 
-    db = SessionLocal()
-
-    bm = BeyondMessage(
-        user_id = data["user_id"],
-        addition = data["extra"],
-    )
-    db.merge(bm)
-    db.commit()
-
-    db.close()
+    with SessionLocal() as db:
+        bm = BeyondMessage(
+            user_id = data["user_id"],
+            addition = data["extra"],
+        )
+        db.merge(bm)
+        db.commit()
 
     await message.answer("addition has successfully added")
-
     await state.clear()
 

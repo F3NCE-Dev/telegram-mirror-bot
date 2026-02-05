@@ -1,10 +1,10 @@
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from src.database import SessionLocal, Branch
+from database import SessionLocal, Branch
 from aiogram.filters import Command
 from aiogram import Router
-from handlers.DB_HANDLER import Is_There_Branch, Is_There_Branch_With_Name
+from dependencies import Is_There_Branch, Is_There_Branch_With_Name
 
 router = Router()
 
@@ -37,18 +37,15 @@ async def wait_for_confirmation(message: Message, state: FSMContext):
     
     data = await state.get_data()
 
-    if data["confirmation_state"] == "Y" or "y":
-        db = SessionLocal()
+    if data["confirmation_state"].lower() == "y":
+        with SessionLocal() as db:
 
-        branch = db.query(Branch).filter(Branch.branch_name == data["branch_name"], Branch.user_id == data["user_id"]).first()
+            branch = db.query(Branch).filter(Branch.branch_name == data["branch_name"], Branch.user_id == data["user_id"]).first()
 
-        db.delete(branch)
-        db.commit()
-        
-        db.close()
+            db.delete(branch)
+            db.commit()
 
         await message.answer("data has removed successfully")
-
     else:
         await message.answer("then i won't delete your branch")
 

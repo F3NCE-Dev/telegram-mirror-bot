@@ -1,4 +1,4 @@
-# Mirror-Bot
+# Telegram-mirror-bot
 
 This Telegram bot allows you to create "branches" of channels and send messages to all selected channels at once.  
 
@@ -22,7 +22,53 @@ This Telegram bot allows you to create "branches" of channels and send messages 
 - Can add extra text to message
 - View your branches and extra messages
 
----
+## Local installation
+
+### Step 1: Clone the repository
+
+```bash
+git clone https://github.com/F3NCE-Dev/telegram-mirror-bot
+cd telegram-mirror-bot
+```
+
+### Step 2: Install requirements.txt
+
+Create a venv
+
+```bash
+python -m venv venv
+
+source venv/bin/activate # for Linux/Mac
+# or
+venv/Scripts/activate # for windows
+```
+
+Install the requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 3: Create a file named *.env*
+
+```bash
+echo "" > .env
+```
+
+Add  required variables
+
+Example:
+
+```bash
+BOT_TOKEN="your bot token"
+DATABASE_URL="your database url"
+```
+
+### Step 4: Run the bot
+
+```bash
+python bot.py
+```
 
 ## Commands
 
@@ -41,3 +87,4 @@ This Telegram bot allows you to create "branches" of channels and send messages 
 
 - **aiogram**
 - **SQLAlchemy**
+- **pydantic-settings**

@@ -1,7 +1,7 @@
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from src.database import SessionLocal, Branch
+from database import SessionLocal, Branch
 from aiogram.filters import Command
 from aiogram import Router
 
@@ -44,21 +44,18 @@ async def process_out(message: Message, state: FSMContext):
             await state.update_data(input_id=message.text)
             data = await state.get_data()
 
-            db = SessionLocal()
-            branch = Branch(
-                user_id = data["user_id"],
-                branch_name = data["branch_name"],
-                input_id = data["input_id"],
-                output_id = data["output_id"],
-                status = True,
-            )
-            db.add(branch)
-            db.commit()
-            
-            db.close()
+            with SessionLocal() as db:
+                branch = Branch(
+                    user_id = data["user_id"],
+                    branch_name = data["branch_name"],
+                    input_id = data["input_id"],
+                    output_id = data["output_id"],
+                    status = True,
+                )
+                db.add(branch)
+                db.commit()
 
             await message.answer("data has received successfully")
-
             await state.clear()
         else:
             await message.answer("input ID must be a number")

@@ -1,2 +1,3 @@
 aiogram==3.24.0
 SQLAlchemy==2.0.45
+pydantic-settings==2.12.0

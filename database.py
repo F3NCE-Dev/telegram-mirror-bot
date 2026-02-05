@@ -1,17 +1,17 @@
-from sqlalchemy import create_engine, Column, Integer, String, Boolean
+from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = "sqlite:///bot.db"
+from datetime import datetime
+
+from config import settings
 
 engine = create_engine(
-    url=DATABASE_URL,
+    url=settings.DATABASE_URL,
     connect_args={"check_same_thread": False},
-    echo=False,
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
 Base = declarative_base()
 
 class Branch(Base):
@@ -19,10 +19,11 @@ class Branch(Base):
 
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, index=True)
-    branch_name = Column(String)
-    input_id = Column(Integer)
-    output_id = Column(Integer)
-    status = Column(Boolean)
+    branch_name = Column(String, nullable=False)
+    input_id = Column(Integer, nullable=False)
+    output_id = Column(Integer, nullable=False)
+    status = Column(Boolean, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
 class BeyondMessage(Base):
     __tablename__ = "Beyond Message"
@@ -30,4 +31,5 @@ class BeyondMessage(Base):
     user_id = Column(Integer, primary_key=True, index=True)
     addition = Column(String)
 
-Base.metadata.create_all(bind=engine)
+def init_db():
+    Base.metadata.create_all(bind=engine)

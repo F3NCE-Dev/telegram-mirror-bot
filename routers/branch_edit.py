@@ -1,7 +1,7 @@
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from handlers.DB_HANDLER import Set_Branch_Name, Is_There_Branch, Is_There_Branch_With_Name, Set_Branch_Status, Get_Branch_Status
+from dependencies import Set_Branch_Name, Is_There_Branch, Is_There_Branch_With_Name, Set_Branch_Status, Get_Branch_Status
 from aiogram.filters import Command
 from aiogram import Router
 
@@ -58,7 +58,8 @@ async def Process_Switch(message: Message, state: FSMContext):
     user_id = message.chat.id
 
     if Is_There_Branch_With_Name(user_id, branch_name):
-        Set_Branch_Status(user_id, branch_name, not Get_Branch_Status)
+        current_status = Get_Branch_Status(user_id, branch_name)
+        Set_Branch_Status(user_id, branch_name, not current_status)
         await message.answer("Successfully!")
     else:
         await message.answer("There is no branch with that name")

@@ -1,10 +1,10 @@
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from src.database import SessionLocal, BeyondMessage
+from database import SessionLocal, BeyondMessage
 from aiogram.filters import Command
 from aiogram import Router
-from handlers.DB_HANDLER import Is_There_Addtion
+from dependencies import Is_There_Addtion
 
 router = Router()
 
@@ -23,18 +23,14 @@ async def Remove_addition(message: Message, state: FSMContext):
 @router.message(States.waiting_for_confimation)
 async def Process_addition_removal(message: Message, state: FSMContext):
     await state.update_data(confirmation_state=message.text)
-    
     data = await state.get_data()
 
-    if data["confirmation_state"] == "Y" or "y":
-        db = SessionLocal()
+    if data["confirmation_state"].lower() == "y":
+        with SessionLocal() as db:
+            addition = db.query(BeyondMessage).filter(BeyondMessage.user_id == data["user_id"]).first()
 
-        addition = db.query(BeyondMessage).filter(BeyondMessage.user_id == data["user_id"]).first()
-
-        db.delete(addition)
-        db.commit()
-        
-        db.close()
+            db.delete(addition)
+            db.commit()
 
         await message.answer("data has removed successfully")
     else:
